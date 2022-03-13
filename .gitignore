@@ -1,0 +1,5 @@
+.venv
+.env
+output
+recman.html
+__pycache__
