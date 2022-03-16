@@ -1,5 +1,5 @@
 .venv
 .env
 output
-recman.html
+input
 __pycache__
