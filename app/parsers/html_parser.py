@@ -2,7 +2,7 @@ from datetime import datetime
 from multiprocessing.pool import ThreadPool
 from typing import List
 import requests
-from os import getenv
+from cookies import get_cookie
 import re
 from bs4 import BeautifulSoup, Tag
 from Recording import Recording
@@ -66,7 +66,7 @@ def get_video_url_from_recman_redirection_link(link: str) -> str:
         RuntimeError: If unable to extract url from redirection link.
     """
     res = requests.get(
-        link, cookies={"SSL_JSESSIONID": getenv("RECMAN_SSL_JSESSIONID")}
+        link, cookies={"SSL_JSESSIONID": get_cookie("SSL_JSESSIONID")}
     )
     id_search = re.search(
         "location\.href='(.*)';",

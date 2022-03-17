@@ -1,7 +1,7 @@
 import re
 import requests
 from requests.models import Response
-from os import getenv
+from cookies import get_cookie
 
 
 def extract_id_from_url(url: str) -> str:
@@ -23,7 +23,7 @@ def extract_id_from_url(url: str) -> str:
     if url.startswith(
         "https://politecnicomilano.webex.com/politecnicomilano/ldr.php?RCID="
     ):
-        res: Response = requests.get(url, cookies={"ticket": getenv("WEBEX_TICKET")})
+        res: Response = requests.get(url, cookies={"ticket": get_cookie("ticket")})
         id_search = re.search(
             "https:\/\/politecnicomilano\.webex\.com\/recordingservice\/sites\/politecnicomilano\/recording\/playback\/([a-z,0-9]*)",
             res.text,

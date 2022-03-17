@@ -1,5 +1,4 @@
 .venv
-.env
 output
 input
 __pycache__

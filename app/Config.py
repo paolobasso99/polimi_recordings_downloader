@@ -6,3 +6,4 @@ class Config:
     DOWNLOAD_INPUT_FILENAME: str = "dowaload_links.txt"
     ARIA2C_CONCURRENT_DOWNLOADS: str = str(16)
     ARIA2C_CONNECTIONS: str = str(16)
+    COOKIES_STORE_FILENAME: str = "cookies.json"

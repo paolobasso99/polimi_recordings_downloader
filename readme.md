@@ -11,23 +11,37 @@ This Python application is used to download a batch of lessons recordings from t
 - **Install libraries**: `pip install -r requirements.txt`
 
 ## Usage
-This downloader parses an HTML page from the recordings archives to fetch the download links of the videos.
+Run `python app --help` for information about usage and additional options.
+
+### GUIDE: Download from recording archives HTML
+This mode parses an HTML file from the recordings archives to fetch the download links of the videos.
 
 In order to download a batch of recordings some steps are required:
-1. With your browser navigare to the recordings archive and search for a course to download. Try to have all the recordings in a single page.
-2. When you found the recordings open the "all" page size in a new tab. This step is required because when filtering the html content is changed dynamically.
+1. With your browser [open the recordings archives](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314). From the browser copy the `SSL_JSESSIONID` cookie value and set it using: `python app set-cookie SSL_JSESSIONID "{COOKIE_VALUE}"`.
+2. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python app set-cookie ticket "{COOKIE_VALUE}"`.
+3. With your browser navigare to the [recordings archive](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314) and search for a course to download. Try to have all the recordings in a single page.
+4. When you found the recordings open the "all" page size in a new tab. This step is required because when filtering the html content is changed dynamically.
 ![Open "all" page size in new tab](assets/open-all-new-tab.png)
-3. Download the HTML page to a `recman.html` file inside the project folder. Right click > View Page Source then copy and paste the content or save using Ctrl+S.
-4. Copy `.env.example` to an `.env` file
-5. Copy the SSL_JSESSIONID cookie to the `RECMAN_SSL_JSESSIONID` env variale inside `.env`
-6. Open a webex link from the recordings archive and perform the login. Then you can copy the `ticket` cookie to the `WEBEX_TICKET` env variale inside `.env`
-7. Run `main.py`: `python main.py`.
+5. Download the HTML page to a file. Right click > View Page Source then copy and paste the content or save using Ctrl+S.
+7. Run `python app html --input={HTML_FILE}`.
 
-### Output
-Inside an `output` folder there will be:
-- A `dowaload_input_file.txt` file which is the one fed to `aria2`
-- One folder for each course parsed in the HTML. Inside this folder there will be the recordings and an `xlsx` file with the recordings metadata.
+### GUIDE: Download from a list of Webex urls
+This mode parses an TXT file with the urls to some recordings in the format:
+- `https://politecnicomilano.webex.com/politecnicomilano/ldr.php?RCID={VIDEO_ID}`
+- `https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/playback/{VIDEO_ID}`
+- `https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/{VIDEO_ID}/playback`
+
+This command supports only downloading one course at the time.
+
+Some steps are required:
+1. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python app set-cookie ticket "{COOKIE_VALUE}"`.
+2. Run `python app urls --input={TXT_FILE} --course="My beutiful course" --accademic-year="2021-22"`.
+
+#### Output
+Inside the output folder there will be:
+- A `dowaload_links.txt` file which is the one fed to `aria2`. If the option `--no-aria2c` is used this file will contain a list of download links to be passed to another program (for example, [Free Download Manager](https://www.freedownloadmanager.org/)) to download the recordings.
+- One folder for each course parsed in the HTML. Inside this folder there will be the recordings and an `xlsx` file with the recordings metadata (unless `--no-create-xlsx` is used).
 
 ## Tips
 ### Retrying downloads without reparsing, directly from dowaload_input_file.txt
-Use the command `aria2c --input-file=output/dowaload_input_file.txt --auto-file-renaming=false --dir=output --max-concurrent-downloads=16 --max-connection-per-server=16`.
+Use the command `aria2c --input-file=output/dowaload_links.txt --auto-file-renaming=false --dir=output --max-concurrent-downloads=16 --max-connection-per-server=16`.

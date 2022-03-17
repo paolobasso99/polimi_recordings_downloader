@@ -1,3 +1,4 @@
+from cookies import save_cookie, check_cookie
 from typing import List
 from Recording import Recording
 import os
@@ -5,7 +6,6 @@ from Config import Config
 from parsers import recordings_from_html
 from parsers import recordings_from_txt
 from xlsx import generate_xlsx
-from dotenv import load_dotenv
 import typer
 import pathlib
 from aria2c import aria2c_download
@@ -16,7 +16,9 @@ import re
 app: typer.Typer = typer.Typer(add_completion=False)
 
 
-@app.command()
+@app.command(
+    help="Download Polimi lessons recordings from the recordings archives HTML."
+)
 def html(
     file: str = typer.Argument(..., help="The input file"),
     output: str = typer.Option(
@@ -34,6 +36,10 @@ def html(
         typer.echo(f"The file {file} does not exists.")
         raise typer.Exit(code=1)
 
+    # Check cookies
+    check_cookie("SSL_JSESSIONID")
+    check_cookie("ticket")
+
     # Get recordings
     typer.echo("Recordings parsing from HTML started...")
     recordings: List[Recording] = recordings_from_html(file)
@@ -47,9 +53,9 @@ def html(
 @app.command()
 def urls(
     file: str = typer.Argument(..., help="The input file"),
-    course: str = typer.Option("", help="The course name"),
+    course: str = typer.Option(..., help="The course name"),
     accademic_year: str = typer.Option(
-        "", help='The course accademic year in the format "2021-22"'
+        ..., help='The course accademic year in the format "2021-22"'
     ),
     output: str = typer.Option(
         os.path.join(pathlib.Path().resolve(), Config.DEFAULT_OUTPUT_FOLDER),
@@ -60,11 +66,18 @@ def urls(
     ),
     create_xlsx: bool = typer.Option(True, help="Generate xlsx"),
 ) -> None:
-    """Download Polimi lessons recordings from a list of urls."""
-    # Option check
+    """Download Polimi lessons recordings from a list of urls. Aviable formats are:
+    https://politecnicomilano.webex.com/politecnicomilano/ldr.php?RCID={VIDEO_ID}
+    https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/playback/{VIDEO_ID}
+    https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/{VIDEO_ID}/playback
+    """
+    # Optio check
     if not (os.path.isfile(file)):
         typer.echo(f"The file {file} does not exists.")
         raise typer.Exit(code=1)
+
+    # Check cookies
+    check_cookie("SSL_JSESSIONID")
 
     accademic_year_r = re.compile("^[0-9]{4}-[0-9]{2}$")
     if accademic_year_r.match(accademic_year) is None:
@@ -106,6 +119,27 @@ def create_output(
             generate_download_links_file(recordings, output)
 
 
+@app.command(help="Set the value of a cookie.")
+def set_cookie(
+    name: str = typer.Argument(
+        ..., help='Cookie name. Possible values are "SSL_JSESSIONID" and "ticket"'
+    ),
+    value: str = typer.Argument(..., help="Cookie value."),
+) -> None:
+    """Set the value of a cookie."""
+    # Arguments check
+    if name != "SSL_JSESSIONID" and name != "ticket":
+        typer.echo(
+            f'The name of the cookie is invalid, possible values are "SSL_JSESSIONID" and "ticket".'
+        )
+        raise typer.Exit(code=1)
+
+    save_cookie(name, value)
+    typer.echo(f"Cookie {name} set to {value}.")
+
+
 if __name__ == "__main__":
-    load_dotenv()
+    if not os.path.exists(typer.get_app_dir(Config.APP_NAME)):
+        os.makedirs(typer.get_app_dir(Config.APP_NAME))
+
     app()

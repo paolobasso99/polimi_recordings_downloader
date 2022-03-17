@@ -1,5 +1,5 @@
 from datetime import datetime
-from os import getenv
+from cookies import get_cookie
 from typing import Optional
 import requests
 from requests.models import Response
@@ -32,7 +32,7 @@ def generate_recording_from_id(
         + "/stream?siteurl=politecnicomilano"
     )
     res: Response = requests.get(
-        endpoint, cookies={"ticket": getenv("WEBEX_TICKET")}
+        endpoint, cookies={"ticket": get_cookie("ticket")}
     )
     if res.headers.get("content-type") != "application/json":
         raise requests.exceptions.ConnectionError(
