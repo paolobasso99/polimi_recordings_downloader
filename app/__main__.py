@@ -66,11 +66,7 @@ def urls(
     ),
     create_xlsx: bool = typer.Option(True, help="Generate xlsx"),
 ) -> None:
-    """Download Polimi lessons recordings from a list of urls. Aviable formats are:
-    https://politecnicomilano.webex.com/politecnicomilano/ldr.php?RCID={VIDEO_ID}
-    https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/playback/{VIDEO_ID}
-    https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/{VIDEO_ID}/playback
-    """
+    """Download Polimi lessons recordings from a list of urls."""
     # Optio check
     if not (os.path.isfile(file)):
         typer.echo(f"The file {file} does not exists.")
