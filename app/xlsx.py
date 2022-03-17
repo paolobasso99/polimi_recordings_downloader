@@ -51,7 +51,6 @@ def generate_xlsx(recordings: List[Recording], output_folder: str) -> None:
         worksheet: Worksheet = workbook.add_worksheet()
         worksheet.set_column(0, 1, 14)
         worksheet.set_column(2, 2, 80)
-        worksheet.set_row(0, 17)
 
         # Write header
         header = workbook.add_format(
