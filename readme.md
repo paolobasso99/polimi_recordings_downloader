@@ -23,7 +23,7 @@ In order to download a batch of recordings some steps are required:
 4. When you found the recordings open the "all" page size in a new tab. This step is required because when filtering the html content is changed dynamically.
 ![Open "all" page size in new tab](assets/open-all-new-tab.png)
 5. Download the HTML page to a file. Right click > View Page Source then copy and paste the content or save using Ctrl+S.
-7. Run `python app html --input={HTML_FILE}`.
+6. Run `python app html {HTML_FILE}`.
 
 ### GUIDE: Download from a list of Webex urls
 This mode parses an TXT file with the urls to some recordings in the format:
