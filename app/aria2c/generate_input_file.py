@@ -18,5 +18,5 @@ def generate_input_file(recordings: List[Recording], output: str) -> None:
         for r in recordings:
             f.write(f"{r.download_url}\n")
             f.write(
-                f"    out={r.course} {r.accademic_year}/{r.recording_datetime.strftime('%Y-%m-%d %H-%M')}.mp4\n"
+                f"    out={r.course} {r.academic_year}/{r.recording_datetime.strftime('%Y-%m-%d %H-%M')}.mp4\n"
             )

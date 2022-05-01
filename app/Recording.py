@@ -8,7 +8,7 @@ class Recording:
     def __init__(
         self,
         video_id: str,
-        accademic_year: str,
+        academic_year: str,
         recording_datetime: datetime,
         course: str,
         subject: str,
@@ -18,14 +18,14 @@ class Recording:
 
         Args:
             video_id (str): Id of the Webex video.
-            accademic_year (str): Accademic year string in the format "2021-22".
+            academic_year (str): Academic year string in the format "2021-22".
             recording_datetime (datetime): Recording datetime.
             course (str): Course name.
             subject (str): Subject.
             download_url (str): Download url of the recording.
         """
         self.video_id = video_id.strip()
-        self.accademic_year = accademic_year.strip()
+        self.academic_year = academic_year.strip()
         self.recording_datetime = recording_datetime
         self.course = self._replace_illegal_characters(course.strip())
         self.subject = subject.strip()

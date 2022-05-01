@@ -37,7 +37,7 @@ This command supports only downloading one course at the time.
 
 Some steps are required:
 1. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python app set-cookie ticket "{COOKIE_VALUE}"`.
-2. Run `python app urls --course="My beutiful course" --accademic-year="2021-22" {TXT_FILE}`.
+2. Run `python app urls --course="My beutiful course" --academic-year="2021-22" {TXT_FILE}`.
 
 #### Output
 Inside the output folder there will be:

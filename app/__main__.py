@@ -54,8 +54,8 @@ def html(
 def urls(
     file: str = typer.Argument(..., help="The input file"),
     course: str = typer.Option(..., help="The course name"),
-    accademic_year: str = typer.Option(
-        ..., help='The course accademic year in the format "2021-22"'
+    academic_year: str = typer.Option(
+        ..., help='The course academic year in the format "2021-22"'
     ),
     output: str = typer.Option(
         os.path.join(pathlib.Path().resolve(), Config.DEFAULT_OUTPUT_FOLDER),
@@ -75,13 +75,13 @@ def urls(
     # Check cookies
     check_cookie("SSL_JSESSIONID")
 
-    accademic_year_r = re.compile("^[0-9]{4}-[0-9]{2}$")
-    if accademic_year_r.match(accademic_year) is None:
-        typer.echo('The course accademic year must be in the format "2021-22".')
+    academic_year_r = re.compile("^[0-9]{4}-[0-9]{2}$")
+    if academic_year_r.match(academic_year) is None:
+        typer.echo('The course academic year must be in the format "2021-22".')
         raise typer.Exit(code=1)
 
     # Get recordings
-    recordings: List[Recording] = recordings_from_txt(file, course, accademic_year)
+    recordings: List[Recording] = recordings_from_txt(file, course, academic_year)
 
     # Output
     create_output(

@@ -9,7 +9,7 @@ from Recording import Recording
 def generate_recording_from_id(
     video_id: str,
     course: str,
-    accademic_year: str,
+    academic_year: str,
     subject: Optional[str] = None,
     recording_datetime: Optional[datetime] = None,
 ) -> Recording:
@@ -18,7 +18,7 @@ def generate_recording_from_id(
     Args:
         video_id (str): Id of the video.
         course (str): Name of the course.
-        accademic_year (str): The accademic year of the course.
+        academic_year (str): The academic year of the course.
         subject (str, optional): The subjet of the recording. If None use the title of the recording.
         recording_datetime (datetime, optional): The datetime of the recording. If None use get from the API.
 
@@ -51,7 +51,7 @@ def generate_recording_from_id(
     return Recording(
         video_id=video_id,
         course=course,
-        accademic_year=accademic_year,
+        academic_year=academic_year,
         download_url=download_url,
         subject=subject,
         recording_datetime=recording_datetime,

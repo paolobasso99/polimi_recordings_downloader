@@ -18,7 +18,7 @@ def _divide_in_courses(recordings: List[Recording]) -> Dict[str, List[Recording]
     courses: Dict[str, List[Recording]] = {}
 
     for r in recordings:
-        key: str = f"{r.course} {r.accademic_year}"
+        key: str = f"{r.course} {r.academic_year}"
         if key not in courses.keys():
             courses[key] = []
 
@@ -64,7 +64,7 @@ def generate_xlsx(recordings: List[Recording], output_folder: str) -> None:
                 "valign": "vcenter",
             }
         )
-        worksheet.write(0, 0, "Accademic year", header)
+        worksheet.write(0, 0, "Academic year", header)
         worksheet.write(0, 1, "Recording date", header)
         worksheet.write(0, 2, "Subject", header)
 
@@ -74,7 +74,7 @@ def generate_xlsx(recordings: List[Recording], output_folder: str) -> None:
         )
         body.set_text_wrap()
         for row, recording in enumerate(recordings):
-            worksheet.write(row + 1, 0, recording.accademic_year, body)
+            worksheet.write(row + 1, 0, recording.academic_year, body)
             worksheet.write(
                 row + 1,
                 1,

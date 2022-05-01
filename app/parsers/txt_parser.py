@@ -7,14 +7,14 @@ import typer
 def recordings_from_txt(
     file: str,
     course: str,
-    accademic_year: str
+    academic_year: str
 ) -> List[Recording]:
     """Get the recordings from the TXT file.
 
     Args:
         file (str): The file containing the html of the recman page.
         course (str): The course name.
-        accademic_year (str): The course accademic year in the format "2021-22".
+        academic_year (str): The course academic year in the format "2021-22".
 
     Returns:
         List[Recording]: Recording objects extracted from the file.
@@ -26,7 +26,7 @@ def recordings_from_txt(
         typer.echo(f"Generating recordings...")
         recordings = [generate_recording_from_id(
             video_id=id,
-            accademic_year=accademic_year,
+            academic_year=academic_year,
             course=course
         ) for id in video_ids]
 

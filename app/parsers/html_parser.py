@@ -44,7 +44,7 @@ def generate_recording_from_row(row: Tag) -> Recording:
     video_id: str = extract_id_from_url(video_url)
     recording: Recording = generate_recording_from_id(
         video_id=video_id,
-        accademic_year=cells[1].text.replace(" / ", "-"),
+        academic_year=cells[1].text.replace(" / ", "-"),
         recording_datetime=recording_datetime,
         course=cells[3].text.replace("\n", " "),
         subject=cells[5].text.replace("\n", " "),
