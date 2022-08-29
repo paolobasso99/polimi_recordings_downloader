@@ -1,4 +1,4 @@
-# Polimi recordings archives downloader
+# Polimi recordings downloader
 This Python application is used to download a batch of lessons recordings from the Polimi recording archives.
 
 ## Set up
@@ -7,23 +7,23 @@ This Python application is used to download a batch of lessons recordings from t
 - [aria2](https://github.com/aria2/aria2/releases/): this needs to be in your $PATH (for example, put aria2c.exe to C:\Program Files\aria2c and add this filder to $PATH)
 
 ### Python dependencies
-- **(Optional) Create a virtual environment**: inside the project folder use `python -m venv .venv`. Activate the environment using `.venv\Scripts\activate.bat` on Windows or `source tutorial-env/bin/activate` on Unix/MacOS. See [here](https://docs.python.org/3/tutorial/venv.html) for more informations about virtual envirorments.
+- **(Optional) Create a virtual environment**: inside the project folder use `python -m venv .venv`. Activate the environment using `.venv\Scripts\activate.bat` on Windows or `source .venv/bin/activate` on Unix/MacOS. See [here](https://docs.python.org/3/tutorial/venv.html) for more informations about virtual envirorments.
 - **Install libraries**: `pip install -r requirements.txt`
 
 ## Usage
-Run `python app --help` for information about usage and additional options.
+Run `python prd --help` for information about usage and additional options.
 
 ### GUIDE: Download from recording archives HTML
 This mode parses an HTML file from the recordings archives to fetch the download links of the videos.
 
 In order to download a batch of recordings some steps are required:
-1. With your browser [open the recordings archives](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314). From the browser copy the `SSL_JSESSIONID` cookie value and set it using: `python app set-cookie SSL_JSESSIONID "{COOKIE_VALUE}"`.
-2. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python app set-cookie ticket "{COOKIE_VALUE}"`.
+1. With your browser [open the recordings archives](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314). From the browser copy the `SSL_JSESSIONID` cookie value and set it using: `python prd set-cookie SSL_JSESSIONID "{COOKIE_VALUE}"`.
+2. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python prd set-cookie ticket "{COOKIE_VALUE}"`.
 3. With your browser navigare to the [recordings archive](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314) and search for a course to download. Try to have all the recordings in a single page.
-4. When you found the recordings open the "all" page size in a new tab. This step is required because when filtering the html content is changed dynamically.
+4. When you found the recordings open the "all" page size in a new tab. This step is required because when filtering the html content is changed dynamically and we need all the links on the source HTML.
 ![Open "all" page size in new tab](assets/open-all-new-tab.png)
 5. Download the HTML page to a file. Right click > View Page Source then copy and paste the content or save using Ctrl+S.
-6. Run `python app html {HTML_FILE}`.
+6. Run `python prd html {HTML_FILE}`.
 
 ### GUIDE: Download from a list of Webex urls
 This mode parses an TXT file with the urls to some recordings in the format:
@@ -36,8 +36,8 @@ This mode parses an TXT file with the urls to some recordings in the format:
 This command supports only downloading one course at the time.
 
 Some steps are required:
-1. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python app set-cookie ticket "{COOKIE_VALUE}"`.
-2. Run `python app urls --course="My beutiful course" --academic-year="2021-22" {TXT_FILE}`.
+1. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python prd set-cookie ticket "{COOKIE_VALUE}"`.
+2. Run `python prd urls --course="My beutiful course" --academic-year="2021-22" {TXT_FILE}`.
 
 #### Output
 Inside the output folder there will be:
