@@ -1,6 +1,9 @@
 # Polimi recordings downloader
 This Python application is used to download a batch of lessons recordings from the Polimi recording archives.
 
+NOTE: This app is unable to download recordings of lessons for which the professor disable downloading.
+You can check if the professor disabled downoading if there is not a download button next to the title in Webex.
+
 ## Set up
 ### System dependencies
 - [Python](https://www.python.org/downloads/)
