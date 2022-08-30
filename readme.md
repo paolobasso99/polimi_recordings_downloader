@@ -1,5 +1,22 @@
 # Polimi recordings downloader
-This Python application is used to download a batch of lessons recordings from the Polimi recording archives.
+This Python application is used to download a batch of lessons recordings of Politecnico di Milano.
+
+This app is intended to download a large amount of recordings (i.e. entire courses) in an easy and fast way.
+If you want to download a single recoring consider using [this browser extension](https://github.com/jacopo-j/WebXDownloader).
+
+## Table of content
+- [Polimi recordings downloader](#polimi-recordings-downloader)
+  - [Table of content](#table-of-content)
+  - [Set up](#set-up)
+    - [System dependencies](#system-dependencies)
+    - [Python dependencies](#python-dependencies)
+  - [Usage](#usage)
+    - [GUIDE 1: Download from recording archives](#guide-1-download-from-recording-archives)
+    - [GUIDE 2: Download from a list of Webex urls](#guide-2-download-from-a-list-of-webex-urls)
+    - [GUIDE 3: Download from Webeep "Recordings" page](#guide-3-download-from-webeep-recordings-page)
+    - [Output](#output)
+    - [Tips](#tips)
+      - [Retrying downloads without reparsing, directly from dowaload_input_file.txt](#retrying-downloads-without-reparsing-directly-from-dowaload_input_filetxt)
 
 ## Set up
 ### System dependencies
@@ -49,11 +66,11 @@ Some steps are required:
 3. With your browser navigare to the Webeep recordings section and copy the url of the page.
 4. Run `python prd webeep --academic-year="2021-22" {WEBEEP_URL}`.
 
-#### Output
+### Output
 Inside the output folder there will be:
 - A `dowaload_links.txt` file which is the one fed to `aria2`. If the option `--no-aria2c` is used this file will contain a list of download links to be passed to another program (for example, [Free Download Manager](https://www.freedownloadmanager.org/)) to download the recordings.
 - One folder for each course parsed in the HTML. Inside this folder there will be the recordings and an `xlsx` file with the recordings metadata (unless `--no-create-xlsx` is used).
 
-## Tips
-### Retrying downloads without reparsing, directly from dowaload_input_file.txt
+### Tips
+#### Retrying downloads without reparsing, directly from dowaload_input_file.txt
 Use the command `aria2c --input-file=output/dowaload_links.txt --auto-file-renaming=false --dir=output --max-concurrent-downloads=16 --max-connection-per-server=16`.
