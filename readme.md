@@ -14,21 +14,20 @@ This Python application is used to download a batch of lessons recordings from t
 Run `python prd --help` for information about usage and additional options.
 
 This app can download the recordings from:
-1. An HTML file of the recordings archives where there are all the links to the recordigs you want to download
+1. An URL to the recordings archives where there are all the links to the recordigs you want to download
 2. A txt file with the links to the recordings
 3. An URL to a Webeep "Recordings" page where the professor links the recordings.
 
-### GUIDE 1: Download from recording archives HTML
-This mode parses an HTML file from the recordings archives to fetch the download links of the videos.
+### GUIDE 1: Download from recording archives
+This mode parses a page from the recordings archives to fetch the download links of the videos.
 
 In order to download a batch of recordings some steps are required:
 1. With your browser [open the recordings archives](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314). From the browser copy the `SSL_JSESSIONID` cookie value and set it using: `python prd set-cookie SSL_JSESSIONID "{COOKIE_VALUE}"`.
 2. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python prd set-cookie ticket "{COOKIE_VALUE}"`.
 3. With your browser navigare to the [recordings archive](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314) and search for a course to download. Try to have all the recordings in a single page.
-4. When you found the recordings **open the "all" page size in a new tab**. This step is required because when filtering the html content is changed dynamically and we need all the links on the source HTML.
+4. Make sure to have all the recordings you want in the page
 ![Open "all" page size in new tab](assets/open-all-new-tab.png)
-5. Download the HTML page to a file. Right click > View Page Source then copy and paste the content or save using Ctrl+S.
-6. Run `python prd archives {HTML_FILE}`.
+5. Copy the current URL and run: `python prd archives {URL}`
 
 ### GUIDE 2: Download from a list of Webex urls
 This mode parses an TXT file with the urls to some recordings in the format:

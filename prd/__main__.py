@@ -21,7 +21,7 @@ app: typer.Typer = typer.Typer(add_completion=False)
     help="Download Polimi lessons recordings from the recordings archives HTML."
 )
 def archives(
-    file: str = typer.Argument(..., help="The input HTML file"),
+    url: str = typer.Argument(..., help="The URL to the recordings archive"),
     output: str = typer.Option(
         os.path.join(pathlib.Path().resolve(), Config.DEFAULT_OUTPUT_FOLDER),
         help="The output path",
@@ -31,10 +31,14 @@ def archives(
     ),
     create_xlsx: bool = typer.Option(True, help="Generate xlsx"),
 ) -> None:
-    """Download Polimi lessons recordings from the recordings archives HTML."""
+    """Download Polimi lessons recordings from the recordings archives url."""
     # Option check
-    if not (os.path.isfile(file)):
-        typer.echo(f"The file {file} does not exists.")
+    if not url.startswith(
+        "https://www11.ceda.polimi.it/recman_frontend/recman_frontend/controller/ArchivioListActivity.do"
+    ):
+        typer.echo(
+            f"The url must start with 'https://www11.ceda.polimi.it/recman_frontend/recman_frontend/controller/ArchivioListActivity.do'."
+        )
         raise typer.Exit(code=1)
 
     # Check cookies
@@ -42,8 +46,8 @@ def archives(
     check_cookie("ticket")
 
     # Get recordings
-    typer.echo("Recordings parsing from HTML started...")
-    recordings: List[Recording] = recordings_from_archives(file)
+    typer.echo("Recordings parsing from archives URL started...")
+    recordings: List[Recording] = recordings_from_archives(url)
 
     # Output
     create_output(
@@ -51,9 +55,7 @@ def archives(
     )
 
 
-@app.command(
-    help="Download Polimi lessons recordings from a Webeep URL."
-)
+@app.command(help="Download Polimi lessons recordings from a Webeep URL.")
 def webeep(
     url: str = typer.Argument(..., help="The webeep URL"),
     academic_year: str = typer.Option(

@@ -9,22 +9,6 @@ from Recording import Recording
 from webex_api import extract_id_from_url, generate_recording_from_id
 
 
-def get_rows(file: str) -> List[Tag]:
-    """Get the rows from the HTML file.
-
-    Args:
-        file (str): The file containing the HTML of the recman page.
-
-    Returns:
-        List[Tag]: List of rows containing the recordings.
-    """
-    with open(file) as f:
-        soup = BeautifulSoup(f, "html.parser")
-
-    table = soup.find("tbody", {"class": "TableDati-tbody"})
-    return table.select("tr")
-
-
 def generate_recording_from_row(row: Tag) -> Recording:
     """Create a Recording object from a row of the recordings table.
 
@@ -65,9 +49,7 @@ def get_video_url_from_recman_redirection_link(link: str) -> str:
     Raises:
         RuntimeError: If unable to extract url from redirection link.
     """
-    res = requests.get(
-        link, cookies={"SSL_JSESSIONID": get_cookie("SSL_JSESSIONID")}
-    )
+    res = requests.get(link, cookies={"SSL_JSESSIONID": get_cookie("SSL_JSESSIONID")})
     id_search = re.search(
         "location\.href='(.*)';",
         res.text,
@@ -79,16 +61,21 @@ def get_video_url_from_recman_redirection_link(link: str) -> str:
     return id_search.group(1)
 
 
-def recordings_from_archives(file: str) -> List[Recording]:
+def recordings_from_archives(url: str) -> List[Recording]:
     """Get the recordings from the HTML file.
 
     Args:
-        file (str): The file containing the HTML of the recman page.
+        url (str): The url of the recman page.
 
     Returns:
         List[Recording]: Recording objects extracted from the file.
     """
-    rows: List[Tag] = get_rows(file)
+    res: requests.Response = requests.get(
+        url, cookies={"SSL_JSESSIONID": get_cookie("SSL_JSESSIONID")}
+    )
+    soup: BeautifulSoup = BeautifulSoup(res.content, "html.parser")
+    rows: List[Tag] = soup.select("tbody.TableDati-tbody tr")
+
     pool: ThreadPool = ThreadPool()
     recordings: List[Recording] = pool.starmap(generate_recording_from_row, zip(rows))
     return recordings

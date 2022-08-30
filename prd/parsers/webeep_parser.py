@@ -22,7 +22,7 @@ def get_redirection_links(url: str) -> List[str]:
     res: requests.Response = requests.get(
         url, cookies={"MoodleSession": get_cookie("MoodleSession")}
     )
-    soup = BeautifulSoup(res.content, "html.parser")
+    soup: BeautifulSoup = BeautifulSoup(res.content, "html.parser")
     for a in soup.select(".single-section a.aalink", href=True):
         redirection_links.append(a["href"])
 
