@@ -40,6 +40,8 @@ def generate_recording_from_id(
         )
     response_obj = res.json()
     download_url: str = response_obj["downloadRecordingInfo"]["downloadInfo"]["mp4URL"]
+    if response_obj["preventDownload"]:
+        download_url = response_obj["fallbackPlaySrc"]
 
     if subject is None:
         subject = response_obj["recordName"]
