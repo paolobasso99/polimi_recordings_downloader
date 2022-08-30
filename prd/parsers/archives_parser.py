@@ -79,7 +79,7 @@ def get_video_url_from_recman_redirection_link(link: str) -> str:
     return id_search.group(1)
 
 
-def recordings_from_html(file: str) -> List[Recording]:
+def recordings_from_archives(file: str) -> List[Recording]:
     """Get the recordings from the HTML file.
 
     Args:

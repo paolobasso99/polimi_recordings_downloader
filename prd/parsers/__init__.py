@@ -1,2 +1,3 @@
-from .html_parser import recordings_from_html
+from .archives_parser import recordings_from_archives
 from .txt_parser import recordings_from_txt
+from .webeep_parser import recordings_from_webeep

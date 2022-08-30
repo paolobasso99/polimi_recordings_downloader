@@ -3,7 +3,8 @@ from typing import List
 from Recording import Recording
 import os
 from Config import Config
-from parsers import recordings_from_html
+from parsers import recordings_from_webeep
+from parsers import recordings_from_archives
 from parsers import recordings_from_txt
 from xlsx import generate_xlsx
 import typer
@@ -19,8 +20,8 @@ app: typer.Typer = typer.Typer(add_completion=False)
 @app.command(
     help="Download Polimi lessons recordings from the recordings archives HTML."
 )
-def html(
-    file: str = typer.Argument(..., help="The input file"),
+def archives(
+    file: str = typer.Argument(..., help="The input HTML file"),
     output: str = typer.Option(
         os.path.join(pathlib.Path().resolve(), Config.DEFAULT_OUTPUT_FOLDER),
         help="The output path",
@@ -42,7 +43,49 @@ def html(
 
     # Get recordings
     typer.echo("Recordings parsing from HTML started...")
-    recordings: List[Recording] = recordings_from_html(file)
+    recordings: List[Recording] = recordings_from_archives(file)
+
+    # Output
+    create_output(
+        recordings=recordings, output=output, create_xlsx=create_xlsx, aria2c=aria2c
+    )
+
+
+@app.command(
+    help="Download Polimi lessons recordings from a Webeep URL."
+)
+def webeep(
+    url: str = typer.Argument(..., help="The webeep URL"),
+    academic_year: str = typer.Option(
+        ..., help='The course academic year in the format "2021-22"'
+    ),
+    output: str = typer.Option(
+        os.path.join(pathlib.Path().resolve(), Config.DEFAULT_OUTPUT_FOLDER),
+        help="The output path",
+    ),
+    aria2c: bool = typer.Option(
+        True, help="Download with aria2c or just create a file with the download links"
+    ),
+    create_xlsx: bool = typer.Option(True, help="Generate xlsx"),
+) -> None:
+    """Download Polimi lessons recordings from a Webeep URL."""
+    # Option check
+    if not url.startswith("https://webeep.polimi.it/"):
+        typer.echo(f"The url must start with 'https://webeep.polimi.it/'.")
+        raise typer.Exit(code=1)
+
+    academic_year_r = re.compile("^[0-9]{4}-[0-9]{2}$")
+    if academic_year_r.match(academic_year) is None:
+        typer.echo('The course academic year must be in the format "2021-22".')
+        raise typer.Exit(code=1)
+
+    # Check cookies
+    check_cookie("MoodleSession")
+    check_cookie("ticket")
+
+    # Get recordings
+    typer.echo("Recordings parsing from Webeep URL started...")
+    recordings: List[Recording] = recordings_from_webeep(url, academic_year)
 
     # Output
     create_output(
@@ -124,9 +167,9 @@ def set_cookie(
 ) -> None:
     """Set the value of a cookie."""
     # Arguments check
-    if name != "SSL_JSESSIONID" and name != "ticket":
+    if name != "SSL_JSESSIONID" and name != "ticket" and name != "MoodleSession":
         typer.echo(
-            f'The name of the cookie is invalid, possible values are "SSL_JSESSIONID" and "ticket".'
+            f'The name of the cookie is invalid, possible values are "SSL_JSESSIONID", "ticket" and "MoodleSession".'
         )
         raise typer.Exit(code=1)
 
