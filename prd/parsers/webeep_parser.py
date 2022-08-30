@@ -56,12 +56,16 @@ def generate_recording_from_redirection_link(
     subject: str = soup.select_one("#region-main h2").text
     course: str = soup.select_one(".page-header-headings h1").text
 
-    recording: Recording = generate_recording_from_id(
-        video_id=video_id,
-        academic_year=academic_year,
-        course=course,
-        subject=subject,
-    )
+    try:
+        recording: Recording = generate_recording_from_id(
+            video_id=video_id,
+            academic_year=academic_year,
+            course=course,
+            subject=subject,
+        )
+    except requests.exceptions.ConnectionError as e:
+        typer.echo(str(e))
+        raise typer.Exit(code=1)
 
     return (True, recording)
 
@@ -79,6 +83,7 @@ def recordings_from_webeep(url: str, academic_year: str) -> List[Recording]:
     redirection_links: List[str] = get_redirection_links(url)
     typer.echo(f"Found {len(redirection_links)} links in the page (not all are recordings).")
 
+    typer.echo("Generating recording links, this may take a bit...")
     pool: ThreadPool = ThreadPool()
     recordings: List[Tuple(bool, Optional[Recording])] = pool.starmap(
         generate_recording_from_redirection_link,

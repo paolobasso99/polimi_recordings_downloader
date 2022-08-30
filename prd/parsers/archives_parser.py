@@ -2,6 +2,7 @@ from datetime import datetime
 from multiprocessing.pool import ThreadPool
 from typing import List
 import requests
+import typer
 from cookies import get_cookie
 import re
 from bs4 import BeautifulSoup, Tag
@@ -26,13 +27,18 @@ def generate_recording_from_row(row: Tag) -> Recording:
         "https://www11.ceda.polimi.it" + cells[0].select_one("a.Link")["href"]
     )
     video_id: str = extract_id_from_url(video_url)
-    recording: Recording = generate_recording_from_id(
-        video_id=video_id,
-        academic_year=cells[1].text.replace(" / ", "-"),
-        recording_datetime=recording_datetime,
-        course=cells[3].text.replace("\n", " "),
-        subject=cells[5].text.replace("\n", " "),
-    )
+
+    try:
+        recording: Recording = generate_recording_from_id(
+            video_id=video_id,
+            academic_year=cells[1].text.replace(" / ", "-"),
+            recording_datetime=recording_datetime,
+            course=cells[3].text.replace("\n", " "),
+            subject=cells[5].text.replace("\n", " "),
+        )
+    except requests.exceptions.ConnectionError as e:
+        typer.echo(str(e))
+        raise typer.Exit(code=1)
 
     return recording
 
@@ -76,6 +82,11 @@ def recordings_from_archives(url: str) -> List[Recording]:
     soup: BeautifulSoup = BeautifulSoup(res.content, "html.parser")
     rows: List[Tag] = soup.select("tbody.TableDati-tbody tr")
 
+    if len(rows) == 0:
+        typer.echo("Zero recordings were found, make sure SSL_JSESSIONID is correct.")
+        raise typer.Exit(code=1)
+
+    typer.echo("Generating recording links, this may take a bit...")
     pool: ThreadPool = ThreadPool()
     recordings: List[Recording] = pool.starmap(generate_recording_from_row, zip(rows))
     return recordings
