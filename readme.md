@@ -16,7 +16,7 @@ If you want to download a single recoring consider using [this browser extension
     - [GUIDE 3: Download from Webeep "Recordings" page](#guide-3-download-from-webeep-recordings-page)
     - [Output](#output)
     - [Tips](#tips)
-      - [Retrying downloads without reparsing, directly from dowaload_input_file.txt](#retrying-downloads-without-reparsing-directly-from-dowaload_input_filetxt)
+      - [Retrying downloads without reparsing, directly from dowaload_links.txt](#retrying-downloads-without-reparsing-directly-from-dowaload_linkstxt)
 
 ## Set up
 ### System dependencies
@@ -69,8 +69,8 @@ Some steps are required:
 ### Output
 Inside the output folder there will be:
 - A `dowaload_links.txt` file which is the one fed to `aria2`. If the option `--no-aria2c` is used this file will contain a list of download links to be passed to another program (for example, [Free Download Manager](https://www.freedownloadmanager.org/)) to download the recordings.
-- One folder for each course parsed in the HTML. Inside this folder there will be the recordings and an `xlsx` file with the recordings metadata (unless `--no-create-xlsx` is used).
+- One folder for each course parsed. Inside this folder there will be the recordings and an `xlsx` file with the recordings metadata (unless `--no-create-xlsx` is used).
 
 ### Tips
-#### Retrying downloads without reparsing, directly from dowaload_input_file.txt
+#### Retrying downloads without reparsing, directly from dowaload_links.txt
 Use the command `aria2c --input-file=output/dowaload_links.txt --auto-file-renaming=false --dir=output --max-concurrent-downloads=16 --max-connection-per-server=16`.
