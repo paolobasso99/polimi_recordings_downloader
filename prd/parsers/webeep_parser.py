@@ -20,8 +20,13 @@ def get_redirection_links(url: str) -> List[str]:
     """
     redirection_links: List[str] = []
     res: requests.Response = requests.get(
-        url, cookies={"MoodleSession": get_cookie("MoodleSession")}
+        url,
+        cookies={"MoodleSession": get_cookie("MoodleSession")},
+        allow_redirects=False,
     )
+    if res.status_code == 303:
+        typer.echo("Unable to open the Webeep page, check MoodleSession cookie.")
+        raise typer.Exit(code=1)
     soup: BeautifulSoup = BeautifulSoup(res.content, "html.parser")
     for a in soup.select(".single-section a.aalink", href=True):
         redirection_links.append(a["href"])
@@ -39,7 +44,7 @@ def generate_recording_from_redirection_link(
         academic_year (str): The course academic year in the format "2021-22".
 
     Returns:
-        Tuple(bool, Optional[Recording]): The first element indicates if a 
+        Tuple(bool, Optional[Recording]): The first element indicates if a
             recording has been found, the second is the Recording object.
     """
     res: requests.Response = requests.get(
@@ -81,7 +86,9 @@ def recordings_from_webeep(url: str, academic_year: str) -> List[Recording]:
         List[Recording]: Recording objects.
     """
     redirection_links: List[str] = get_redirection_links(url)
-    typer.echo(f"Found {len(redirection_links)} links in the page (not all are recordings).")
+    typer.echo(
+        f"Found {len(redirection_links)} links in the page (not all are recordings)."
+    )
 
     typer.echo("Generating recording links, this may take a bit...")
     pool: ThreadPool = ThreadPool()
@@ -91,4 +98,4 @@ def recordings_from_webeep(url: str, academic_year: str) -> List[Recording]:
     )
 
     recordings = list(filter(lambda item: item[0] == True, recordings))
-    return [ r[1] for r in recordings ]
+    return [r[1] for r in recordings]
