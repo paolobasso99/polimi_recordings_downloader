@@ -96,8 +96,8 @@ def webeep(
 
 
 @app.command()
-def urls(
-    file: str = typer.Argument(..., help="The input file"),
+def txt(
+    file: str = typer.Argument(..., help="The input txt file"),
     course: str = typer.Option(..., help="The course name"),
     academic_year: str = typer.Option(
         ..., help='The course academic year in the format "2021-22"'
@@ -107,7 +107,7 @@ def urls(
         help="The output path",
     ),
     aria2c: bool = typer.Option(
-        True, help="Download with aria2c or just create a file with the download links"
+        True, help="Download with aria2c or just create a file with the download links or video ids"
     ),
     create_xlsx: bool = typer.Option(True, help="Generate xlsx"),
 ) -> None:
@@ -118,7 +118,7 @@ def urls(
         raise typer.Exit(code=1)
 
     # Check cookies
-    check_cookie("SSL_JSESSIONID")
+    check_cookie("ticket")
 
     academic_year_r = re.compile("^[0-9]{4}-[0-9]{2}$")
     if academic_year_r.match(academic_year) is None:

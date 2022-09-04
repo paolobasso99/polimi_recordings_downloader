@@ -12,7 +12,7 @@ If you want to download a single recoring consider using [this browser extension
     - [Python dependencies](#python-dependencies)
   - [Usage](#usage)
     - [GUIDE 1: Download from recording archives](#guide-1-download-from-recording-archives)
-    - [GUIDE 2: Download from a list of Webex urls](#guide-2-download-from-a-list-of-webex-urls)
+    - [GUIDE 2: Download from a list of Webex urls or video ids](#guide-2-download-from-a-list-of-webex-urls-or-video-ids)
     - [GUIDE 3: Download from Webeep "Recordings" page](#guide-3-download-from-webeep-recordings-page)
     - [Output](#output)
     - [Tips](#tips)
@@ -46,8 +46,9 @@ In order to download a batch of recordings some steps are required:
 ![Open "all" page size in new tab](assets/open-all-new-tab.png)
 5. Copy the current URL and run: `python prd archives {URL}`
 
-### GUIDE 2: Download from a list of Webex urls
-This mode parses an TXT file with the urls to some recordings in the format:
+### GUIDE 2: Download from a list of Webex urls or video ids
+This mode parses an TXT file with the urls or video ids of some recordings in the format:
+- `{VIDEO_ID}`
 - `https://politecnicomilano.webex.com/politecnicomilano/ldr.php?RCID={VIDEO_ID}`
 - `https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/playback/{VIDEO_ID}`
 - `https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/{VIDEO_ID}/playback`
@@ -58,7 +59,7 @@ This command supports only downloading one course at the time.
 
 Some steps are required:
 1. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python prd set-cookie ticket "{COOKIE_VALUE}"`.
-2. Run `python prd urls --course="My beutiful course" --academic-year="2021-22" {TXT_FILE}`.
+2. Run `python prd txt --course="My beutiful course" --academic-year="2021-22" {TXT_FILE}`.
 
 ### GUIDE 3: Download from Webeep "Recordings" page
 This mode parses a "Recordings" page where the professor links the recordings.

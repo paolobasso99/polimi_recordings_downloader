@@ -22,7 +22,15 @@ def recordings_from_txt(
     """
     recordings: List[Recording] = []
     with open(file) as f:
-        video_ids: List[str] = [extract_id_from_url(line.rstrip()) for line in f]
+        video_ids: List[str] = []
+        for i, line in enumerate(f):
+            line = line.rstrip()
+            if line.startswith("http"):
+                video_ids.append(extract_id_from_url(line))
+            elif len(line) == 32:
+                video_ids.append(line)
+            elif len(line) != 32 and len(line) > 0:
+                typer.echo(f"Invalid line found, line number {i+1} is \"{line}\".")
         typer.echo(f"Found {len(video_ids)} urls in the input file.")
         typer.echo("Generating recording links, this may take a bit...")
 
