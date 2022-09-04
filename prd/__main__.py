@@ -163,7 +163,7 @@ def create_output(
 @app.command(help="Set the value of a cookie.")
 def set_cookie(
     name: str = typer.Argument(
-        ..., help='Cookie name. Possible values are "SSL_JSESSIONID" and "ticket"'
+        ..., help='Cookie name. Possible values are "SSL_JSESSIONID", "ticket" and "MoodleSession".'
     ),
     value: str = typer.Argument(..., help="Cookie value."),
 ) -> None:
