@@ -61,6 +61,9 @@ Some steps are required:
 2. Run `python prd urls --course="My beutiful course" --academic-year="2021-22" {TXT_FILE}`.
 
 ### GUIDE 3: Download from Webeep "Recordings" page
+This mode parses a "Recordings" page where the professor links the recordings.
+
+Some steps are required:
 1. With your browser [open Webeep](https://webeep.polimi.it). From the browser copy the `MoodleSession` cookie value and set it using: `python prd set-cookie MoodleSession "{COOKIE_VALUE}"`.
 2. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python prd set-cookie ticket "{COOKIE_VALUE}"`.
 3. With your browser navigare to the Webeep recordings section and copy the url of the page.
