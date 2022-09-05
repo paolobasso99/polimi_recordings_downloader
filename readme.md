@@ -44,7 +44,7 @@ In order to download a batch of recordings some steps are required:
 3. With your browser navigare to the [recordings archive](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314) and search for a course to download. Try to have all the recordings in a single page.
 4. Make sure to have all the recordings you want in the page
 ![Open "all" page size in new tab](assets/open-all-new-tab.png)
-5. Copy the current URL and run: `python prd archives {URL}`
+5. Copy the current URL and run: `python prd archives "{URL}"`
 
 ### GUIDE 2: Download from a list of Webex urls or video ids
 This mode parses an TXT file with the urls or video ids of some recordings in the format:
