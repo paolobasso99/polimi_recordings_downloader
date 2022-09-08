@@ -6,6 +6,7 @@ from Config import Config
 from parsers import recordings_from_webeep
 from parsers import recordings_from_archives
 from parsers import recordings_from_txt
+from parsers import recordings_from_webpage
 from xlsx import generate_xlsx
 import typer
 import pathlib
@@ -127,6 +128,36 @@ def txt(
 
     # Get recordings
     recordings: List[Recording] = recordings_from_txt(file, course, academic_year)
+
+    # Output
+    create_output(
+        recordings=recordings, output=output, create_xlsx=create_xlsx, aria2c=aria2c
+    )
+
+@app.command()
+def webpage(
+    url: str = typer.Argument(..., help="The URL of the webpage"),
+    course: str = typer.Option(..., help="The course name"),
+    academic_year: str = typer.Option(
+        ..., help='The course academic year in the format "2021-22"'
+    ),
+    output: str = typer.Option(
+        os.path.join(pathlib.Path().resolve(), Config.DEFAULT_OUTPUT_FOLDER),
+        help="The output path",
+    ),
+    aria2c: bool = typer.Option(
+        True, help="Download with aria2c or just create a file with the download links or video ids"
+    ),
+    create_xlsx: bool = typer.Option(True, help="Generate xlsx"),
+) -> None:
+    """Download Polimi lessons recordings from a list of urls."""
+    academic_year_r = re.compile("^[0-9]{4}-[0-9]{2}$")
+    if academic_year_r.match(academic_year) is None:
+        typer.echo('The course academic year must be in the format "2021-22".')
+        raise typer.Exit(code=1)
+
+    # Get recordings
+    recordings: List[Recording] = recordings_from_webpage(url, course, academic_year)
 
     # Output
     create_output(
