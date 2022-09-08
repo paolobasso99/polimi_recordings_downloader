@@ -79,7 +79,7 @@ def recordings_from_webeep(url: str, academic_year: str) -> List[Recording]:
     """Get the recordings from the Webeep page.
 
     Args:
-        url (str): The file Webeep url containing the links to the recordings.
+        url (str): The Webeep url containing the links to the recordings.
         academic_year (str): The course academic year in the format "2021-22".
 
     Returns:
