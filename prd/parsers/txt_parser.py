@@ -32,7 +32,7 @@ def recordings_from_txt(
             elif len(line) != 32 and len(line) > 0:
                 typer.echo(f"Invalid line found, line number {i+1} is \"{line}\".")
         typer.echo(f"Found {len(video_ids)} urls in the input file.")
-        typer.echo("Generating recording links, this may take a bit...")
+        typer.echo("Generating recording download links, this may take a bit...")
 
         for id in video_ids:
             try:

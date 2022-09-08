@@ -90,7 +90,7 @@ def recordings_from_webeep(url: str, academic_year: str) -> List[Recording]:
         f"Found {len(redirection_links)} links in the page (not all are recordings)."
     )
 
-    typer.echo("Generating recording links, this may take a bit...")
+    typer.echo("Generating recording download links, this may take a bit...")
     pool: ThreadPool = ThreadPool()
     recordings: List[Tuple(bool, Optional[Recording])] = pool.starmap(
         generate_recording_from_redirection_link,

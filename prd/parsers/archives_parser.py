@@ -86,7 +86,7 @@ def recordings_from_archives(url: str) -> List[Recording]:
         typer.echo("Zero recordings were found, make sure SSL_JSESSIONID is correct.")
         raise typer.Exit(code=1)
 
-    typer.echo("Generating recording links, this may take a bit...")
+    typer.echo("Generating recording download links, this may take a bit...")
     pool: ThreadPool = ThreadPool()
     recordings: List[Recording] = pool.starmap(generate_recording_from_row, zip(rows))
     return recordings
