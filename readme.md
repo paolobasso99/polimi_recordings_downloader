@@ -14,7 +14,8 @@ If you want to download a single recoring consider using [this browser extension
     - [GUIDE 1: Download from recording archives](#guide-1-download-from-recording-archives)
     - [GUIDE 2: Download from a list of Webex urls or video ids](#guide-2-download-from-a-list-of-webex-urls-or-video-ids)
     - [GUIDE 3: Download from Webeep "Recordings" page](#guide-3-download-from-webeep-recordings-page)
-    - [GUIDE 4: Download from webpage](#guide-4-download-from-webpage)
+    - [GUIDE 4: Download from webpage url](#guide-4-download-from-webpage-url)
+    - [GUIDE 5: Download from webpage HTML](#guide-5-download-from-webpage-html)
     - [Output](#output)
     - [Tips](#tips)
       - [Retrying downloads without reparsing, directly from dowaload_links.txt](#retrying-downloads-without-reparsing-directly-from-dowaload_linkstxt)
@@ -35,7 +36,8 @@ This app can download the recordings from:
 1. An URL to the recordings archives where there are all the links to the recordigs you want to download
 2. A txt file with the links to the recordings
 3. An URL to a Webeep "Recordings" page where the professor links the recordings.
-4. The URL to a webpage where the professor links directly the links to the videos (for example, the personal site of the professor)
+4. The URL to a public (no authentication) webpage where the professor links directly the links to the videos (for example, the personal site of the professor)
+5. An HTML file with the direct links to the videos. This is useful when the webpage is behind authentication.
 
 ### GUIDE 1: Download from recording archives
 This mode parses a page from the recordings archives to fetch the download links of the videos.
@@ -72,13 +74,21 @@ Some steps are required:
 3. With your browser navigare to the Webeep recordings section and copy the url of the page.
 4. Run `python prd webeep --academic-year="2021-22" {WEBEEP_URL}`.
 
-### GUIDE 4: Download from webpage
-This mode parses an HTML page where the professor links directly the recordings.
+### GUIDE 4: Download from webpage url
+This mode parses an URL to a public (i.e. without authentication) HTML page where the professor links directly the recordings.
 
 Some steps are required:
 1. With your browser navigate to the page where the direct links are placed.
 2. Copy the URL of the page.
-3. Run `python prd webpage --course="{COURSE_NAME}" --academic-year="2021-22" {URL}`.
+3. Run `python prd webpage-url --course="{COURSE_NAME}" --academic-year="2021-22" {URL}`.
+
+### GUIDE 5: Download from webpage HTML
+This mode parses an HTML file where the professor linked directly the recordings.
+
+Some steps are required:
+1. With your browser navigate to the page where the direct links are placed.
+2. Download the page HTML.
+3. Run `python prd webpage-html --course="{COURSE_NAME}" --academic-year="2021-22" {FILE_PATH}`.
 
 ### Output
 Inside the output folder there will be:

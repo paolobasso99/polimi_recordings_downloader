@@ -30,11 +30,36 @@ def get_id_from_anchor(anchor: Tag) -> Tuple[bool, Optional[str]]:
     try:
         direct_url: str = anchor["href"]
         if pattern_google_redirect.match(anchor["href"]):
-            direct_url = unquote(pattern_google_redirect.search(anchor["href"]).group(1))
+            direct_url = unquote(
+                pattern_google_redirect.search(anchor["href"]).group(1)
+            )
 
         return (True, extract_id_from_url(direct_url))
     except ValueError:
         return (False, None)
+
+
+def get_video_ids_from_soup(soup: BeautifulSoup) -> List[str]:
+    """Get the video ids in the links in a webpage from the soup.
+
+    Args:
+        soup (BeautifulSoup): The BeautifulSoup object of a webpage.
+
+    Returns:
+        List[str]: List of video ids.
+    """
+    anchors = soup.select("a", href=True)
+    typer.echo(
+        f"Found {len(anchors)} links in the page, need to get only the Webex ones..."
+    )
+    pool: ThreadPool = ThreadPool()
+    video_ids: List[str] = pool.starmap(
+        get_id_from_anchor,
+        zip(anchors),
+    )
+
+    video_ids = list(filter(lambda item: item[0] == True, video_ids))
+    return [v[1] for v in video_ids]
 
 
 def get_video_ids_from_webpage_url(url: str) -> List[str]:
@@ -52,24 +77,13 @@ def get_video_ids_from_webpage_url(url: str) -> List[str]:
         raise typer.Exit(code=1)
     soup: BeautifulSoup = BeautifulSoup(res.content, "html.parser")
 
-    anchors = soup.select("a", href=True)
-    typer.echo(
-        f"Found {len(anchors)} links in the page, need to get only the Webex ones..."
-    )
-    pool: ThreadPool = ThreadPool()
-    video_ids: List[str] = pool.starmap(
-        get_id_from_anchor,
-        zip(anchors),
-    )
-
-    video_ids = list(filter(lambda item: item[0] == True, video_ids))
-    return [v[1] for v in video_ids]
+    return get_video_ids_from_soup(soup)
 
 
-def recordings_from_webpage(
+def recordings_from_webpage_url(
     url: str, course: str, academic_year: str
 ) -> List[Recording]:
-    """Get the recordings from the Webeep page.
+    """Get the recordings from a webpage URL.
 
     Args:
         url (str): The url containing the links to the recordings.
@@ -87,7 +101,40 @@ def recordings_from_webpage(
         pool: ThreadPool = ThreadPool()
         recordings: List[Recording] = pool.starmap(
             generate_recording_from_id,
-            zip(video_ids, repeat(academic_year), repeat(course)),
+            zip(video_ids, repeat(course), repeat(academic_year)),
+        )
+    except requests.exceptions.ConnectionError as e:
+        typer.echo(str(e))
+        raise typer.Exit(code=1)
+
+    return recordings
+
+
+def recordings_from_webpage_file(
+    file: str, course: str, academic_year: str
+) -> List[Recording]:
+    """Get the recordings from an HTML file.
+
+    Args:
+        file (str): The path to the file.
+        course (str): The course name.
+        academic_year (str): The course academic year in the format "2021-22".
+
+    Returns:
+        List[Recording]: Recording objects.
+    """
+    with open(file) as f:
+        soup = BeautifulSoup(f, "html.parser")
+    
+    video_ids: List[str] = get_video_ids_from_soup(soup)
+    typer.echo(f"Found {len(video_ids)} links to Webex in the page.")
+
+    typer.echo("Generating recording download links, this may take a bit...")
+    try:
+        pool: ThreadPool = ThreadPool()
+        recordings: List[Recording] = pool.starmap(
+            generate_recording_from_id,
+            zip(video_ids, repeat(course), repeat(academic_year)),
         )
     except requests.exceptions.ConnectionError as e:
         typer.echo(str(e))
