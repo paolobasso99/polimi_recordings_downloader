@@ -2,7 +2,6 @@ from typing import List, Tuple, Optional
 from multiprocessing.pool import ThreadPool
 from itertools import repeat
 import re
-from urllib.parse import unquote
 import requests
 import typer
 from bs4 import BeautifulSoup, Tag
@@ -30,9 +29,7 @@ def get_id_from_anchor(anchor: Tag) -> Tuple[bool, Optional[str]]:
     try:
         direct_url: str = anchor["href"]
         if pattern_google_redirect.match(anchor["href"]):
-            direct_url = unquote(
-                pattern_google_redirect.search(anchor["href"]).group(1)
-            )
+            direct_url = pattern_google_redirect.search(anchor["href"]).group(1)
 
         return (True, extract_id_from_url(direct_url))
     except ValueError:

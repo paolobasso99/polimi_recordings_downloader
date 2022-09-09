@@ -58,6 +58,7 @@ This mode parses an TXT file with the urls or video ids of some recordings in th
 - `https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/{VIDEO_ID}/playback`
 - `https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/recording/{VIDEO_ID}/playback`
 - `https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/recording/playback/{VIDEO_ID}`
+- `https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/recording/{VIDEO_ID}`
 
 This command supports only downloading one course at the time.
 
