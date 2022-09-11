@@ -35,10 +35,10 @@ def archives(
     """Download Polimi lessons recordings from the recordings archives url."""
     # Option check
     if not url.startswith(
-        "https://www11.ceda.polimi.it/recman_frontend/recman_frontend/controller/ArchivioListActivity.do"
+        "https://www11.ceda.polimi.it/recman_frontend/recman_frontend/controller/"
     ):
         typer.echo(
-            f"The url must start with 'https://www11.ceda.polimi.it/recman_frontend/recman_frontend/controller/ArchivioListActivity.do'."
+            f"The url must start with 'https://www11.ceda.polimi.it/recman_frontend/recman_frontend/controller/'."
         )
         raise typer.Exit(code=1)
 
