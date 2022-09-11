@@ -21,12 +21,12 @@ def extract_academic_year_from_datetime(dt: datetime) -> str:
     Returns:
         str: The academic year in the format "2020-22".
     """
-    starting_year: str = dt.strftime("%y")
+    starting_year: str = dt.strftime("%Y")
     end_year: str = dt.replace(year=dt.year + 1).strftime("%y")
     if dt.month < 8:
-        end_year = starting_year
-        starting_year = dt.replace(year=dt.year - 1).strftime("%y")
-    return starting_year + end_year
+        end_year = dt.strftime("%y")
+        starting_year = dt.replace(year=dt.year - 1).strftime("%Y")
+    return starting_year + "-" + end_year
 
 
 def generate_recording_from_row(row: Tag, is_UserListActivity: bool) -> Recording:
