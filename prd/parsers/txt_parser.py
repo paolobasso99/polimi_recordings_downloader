@@ -49,7 +49,7 @@ def recordings_from_txt(file: str, course: str, academic_year: str) -> List[Reco
         pool: ThreadPool = ThreadPool()
         recordings: List[Recording] = pool.starmap(
             generate_recording_from_id,
-            zip(video_ids, repeat(academic_year), repeat(course)),
+            zip(video_ids, repeat(course), repeat(academic_year)),
         )
     except requests.exceptions.ConnectionError as e:
         typer.echo(str(e))
