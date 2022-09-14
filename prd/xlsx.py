@@ -52,8 +52,8 @@ def generate_xlsx(recordings: List[Recording], output_folder: str) -> None:
             os.path.join(course_output_path, course + ".xlsx")
         )
         worksheet: Worksheet = workbook.add_worksheet()
-        worksheet.set_column(0, 1, 14)
-        worksheet.set_column(2, 2, 80)
+        worksheet.set_column(0, 2, 14)
+        worksheet.set_column(3, 3, 80)
 
         # Write header
         header = workbook.add_format(
@@ -67,24 +67,43 @@ def generate_xlsx(recordings: List[Recording], output_folder: str) -> None:
                 "valign": "vcenter",
             }
         )
-        worksheet.write(0, 0, "Academic year", header)
-        worksheet.write(0, 1, "Recording date", header)
-        worksheet.write(0, 2, "Subject", header)
+        worksheet.write(0, 0, "Link", header)
+        worksheet.write(0, 1, "Academic year", header)
+        worksheet.write(0, 2, "Recording date", header)
+        worksheet.write(0, 3, "Subject", header)
 
         # Write rows
         body = workbook.add_format(
-            {"font_name": "Calibri", "font_size": 11, "valign": "vcenter"}
+            {
+                "font_name": "Calibri",
+                "font_size": 11,
+                "valign": "vcenter",
+                "text_wrap": True,
+            }
         )
         body.set_text_wrap()
+        links = workbook.add_format(
+            {
+                "font_name": "Calibri",
+                "font_size": 11,
+                "valign": "vcenter",
+                "font_color": "blue",
+                "underline": True,
+                "text_wrap": True,
+            }
+        )
         for row, recording in enumerate(recordings):
-            worksheet.write(row + 1, 0, recording.academic_year, body)
+            worksheet.write_url(
+                row + 1, 0, recording.get_video_url(), links, string="Link"
+            )
+            worksheet.write(row + 1, 1, recording.academic_year, body)
             worksheet.write(
                 row + 1,
-                1,
+                2,
                 recording.recording_datetime.strftime("%Y-%m-%d %H:%M"),
                 body,
             )
-            worksheet.write(row + 1, 2, recording.subject, body)
+            worksheet.write(row + 1, 3, recording.subject, body)
 
         workbook.close()
 

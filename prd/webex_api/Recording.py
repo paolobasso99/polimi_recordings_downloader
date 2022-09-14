@@ -31,6 +31,17 @@ class Recording:
         self.subject = subject.strip()
         self.download_url = download_url.strip()
 
+    def get_video_url(self) -> str:
+        """Get the url to the recording.
+
+        Returns:
+            str: The url to the recording.
+        """
+        return (
+            "https://politecnicomilano.webex.com/recordingservice/sites/politecnicomilano/recording/"
+            + self.video_id
+        )
+
     def _replace_illegal_characters(self, string: str) -> str:
         """Replace the illegal characters in a string. Such characters are < > : \ / \ | ? * .
 
