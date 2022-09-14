@@ -1,7 +1,7 @@
 from multiprocessing.pool import ThreadPool
 from itertools import repeat
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
 from prd.webex_api import Recording
@@ -12,13 +12,13 @@ from prd.parsers import Parser
 class TxtParser(Parser):
     """Class to parse txt files."""
 
-    def parse(self, file: Path, course: str, academic_year: str) -> List[Recording]:
+    def parse(self, file: Path, course: str, academic_year: Optional[str] = None) -> List[Recording]:
         """Get the recordings from the TXT file.
 
         Args:
             file (Path): The file containing the html of the recman page.
             course (str): The course name.
-            academic_year (str): The course academic year in the format "2021-22".
+            academic_year (Optional[str], optional): The academic year in the format "2021-22". Defaults to None.
 
         Returns:
             List[Recording]: Recording objects extracted from the file.

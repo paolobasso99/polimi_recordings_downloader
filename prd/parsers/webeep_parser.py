@@ -80,12 +80,12 @@ class WebeepParser(Parser):
 
         return (True, recording)
 
-    def parse(self, url: str, academic_year: str) -> List[Recording]:
+    def parse(self, url: str, academic_year: Optional[str] = None) -> List[Recording]:
         """Get the recordings from the Webeep page.
 
         Args:
             url (str): The Webeep url containing the links to the recordings.
-            academic_year (str): The course academic year in the format "2021-22".
+            academic_year (Optional[str], optional): The academic year in the format "2021-22". Defaults to None.
 
         Raises:
             ValueError: If the url is not correct.

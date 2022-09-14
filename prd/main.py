@@ -1,6 +1,6 @@
 import typer
 import pathlib
-from typing import List
+from typing import List, Optional
 from rich import print
 import os
 
@@ -60,8 +60,8 @@ def archives(
 @app.command()
 def webeep(
     url: str = typer.Argument(..., help="The webeep URL"),
-    academic_year: str = typer.Option(
-        ...,
+    academic_year: Optional[str] = typer.Option(
+        None,
         callback=validate_academic_year,
         help='The course academic year in the format "2021-22"',
     ),
@@ -104,9 +104,9 @@ def txt(
     file: pathlib.Path = typer.Argument(
         ..., exists=True, file_okay=True, readable=True, help="The input txt file"
     ),
-    course: str = typer.Option(..., prompt="Course name:", help="The course name"),
-    academic_year: str = typer.Option(
-        ...,
+    course: str = typer.Option(..., prompt="Course name", help="The course name"),
+    academic_year: Optional[str] = typer.Option(
+        None,
         callback=validate_academic_year,
         help='The course academic year in the format "2021-22"',
     ),
@@ -146,9 +146,9 @@ def txt(
 @app.command()
 def webpage_url(
     url: str = typer.Argument(..., help="The URL of the webpage"),
-    course: str = typer.Option(..., prompt="Course name:", help="The course name"),
-    academic_year: str = typer.Option(
-        ...,
+    course: str = typer.Option(..., prompt="Course name", help="The course name"),
+    academic_year: Optional[str] = typer.Option(
+        None,
         callback=validate_academic_year,
         help='The course academic year in the format "2021-22"',
     ),
@@ -193,9 +193,9 @@ def webpage_html(
         readable=True,
         help="The path to the HTML file",
     ),
-    course: str = typer.Option(..., prompt="Course name:", help="The course name"),
-    academic_year: str = typer.Option(
-        ...,
+    course: str = typer.Option(..., prompt="Course name", help="The course name"),
+    academic_year: Optional[str] = typer.Option(
+        None,
         callback=validate_academic_year,
         help='The course academic year in the format "2021-22"',
     ),

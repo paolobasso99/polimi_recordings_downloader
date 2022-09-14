@@ -74,14 +74,14 @@ class WebpageParser(Parser):
         return video_ids
 
     def parse(
-        self, soup: BeautifulSoup, course: str, academic_year: str
+        self, soup: BeautifulSoup, course: str, academic_year: Optional[str] = None
     ) -> List[Recording]:
         """Get the recordings from a webpage soup.
 
         Args:
             soup (BeautifulSoup): The soup.
             course (str): The course name.
-            academic_year (str): The academic year in the format "2020-21".
+            academic_year (Optional[str], optional): The academic year in the format "2021-22". Defaults to None.
 
         Returns:
             List[Recording]: The list of the recording objects.

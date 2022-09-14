@@ -2,7 +2,7 @@ import os
 from xlsxwriter import Workbook
 from xlsxwriter.worksheet import Worksheet
 from typing import List, Dict
-from rich.progress import track
+from rich import print
 
 from prd.webex_api import Recording
 

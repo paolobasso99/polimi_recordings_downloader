@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 import requests
 from requests.models import Response
+from prd.utils import extract_academic_year_from_datetime
 
 from prd.webex_api.Recording import Recording
 
@@ -10,7 +11,7 @@ def generate_recording_from_id(
     video_id: str,
     ticket: str,
     course: str,
-    academic_year: str,
+    academic_year: Optional[str] = None,
     subject: Optional[str] = None,
     recording_datetime: Optional[datetime] = None,
 ) -> Recording:
@@ -20,7 +21,7 @@ def generate_recording_from_id(
         video_id (str): Id of the video.
         ticket (str): The "ticket" cookie value.
         course (str): Name of the course.
-        academic_year (str): The academic year of the course.
+        academic_year (str, optional): The academic year of the course. If None infer from recording.
         subject (str, optional): The subjet of the recording. If None use the title of the recording.
         recording_datetime (datetime, optional): The datetime of the recording. If None use get from the API.
 
@@ -51,6 +52,8 @@ def generate_recording_from_id(
         recording_datetime = datetime.strptime(
             response_obj["createTime"], "%Y-%m-%d %H:%M:%S"
         )
+    if academic_year is None:
+        academic_year = extract_academic_year_from_datetime(recording_datetime)
 
     return Recording(
         video_id=video_id,
