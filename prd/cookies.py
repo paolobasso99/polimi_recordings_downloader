@@ -1,7 +1,8 @@
 import os
-from Config import Config
 import typer
 import json
+
+from prd.config import Config
 
 COOKIE_STORE_FILEPATH: str = os.path.join(
     typer.get_app_dir(Config.APP_NAME), Config.COOKIES_STORE_FILENAME
@@ -53,19 +54,3 @@ def get_cookie(name: str) -> str:
 
     if not cookie_exists:
         raise ValueError("The cookie " + name + " is not set.")
-
-
-def check_cookie(name: str) -> None:
-    """Check if a cookie exists. If not exit from typer.
-
-    Args:
-        name (str): Name of the cookie.
-
-    Raises:
-        typer.Exit: Exit from typer if cookie does not exists.
-    """
-    try:
-        get_cookie(name)
-    except ValueError as e:
-        typer.echo(e)
-        raise typer.Exit(1)

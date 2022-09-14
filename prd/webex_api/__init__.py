@@ -1,2 +1,3 @@
 from .extract_id_from_url import extract_id_from_url
 from .generate_recording_from_id import generate_recording_from_id
+from .Recording import Recording

@@ -1,58 +1,54 @@
-from itertools import repeat
-from typing import List
-from Recording import Recording
-from webex_api import extract_id_from_url, generate_recording_from_id
-import typer
-import requests
 from multiprocessing.pool import ThreadPool
+from itertools import repeat
+from pathlib import Path
+from typing import List
+from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
-def get_video_ids_from_file(file:str) -> List[str]:
-    """Get the video ids from a txt file.
-
-    Args:
-        file (str): The file path.
-
-    Returns:
-        List[str]: A list of video ids.
-    """
-    video_ids: List[str] = []
-    with open(file) as f:
-        for i, line in enumerate(f):
-            line = line.rstrip()
-            if line.startswith("http"):
-                video_ids.append(extract_id_from_url(line))
-            elif len(line) == 32:
-                video_ids.append(line)
-            elif len(line) != 32 and len(line) > 0:
-                typer.echo(f'Invalid line found, line number {i+1} is "{line}".')
-        
-    return video_ids
-    
+from prd.webex_api import Recording
+from prd.webex_api import extract_id_from_url, generate_recording_from_id
+from prd.parsers import Parser
 
 
-def recordings_from_txt(file: str, course: str, academic_year: str) -> List[Recording]:
-    """Get the recordings from the TXT file.
+class TxtParser(Parser):
+    """Class to parse txt files."""
 
-    Args:
-        file (str): The file containing the html of the recman page.
-        course (str): The course name.
-        academic_year (str): The course academic year in the format "2021-22".
+    def parse(self, file: Path, course: str, academic_year: str) -> List[Recording]:
+        """Get the recordings from the TXT file.
 
-    Returns:
-        List[Recording]: Recording objects extracted from the file.
-    """
-    video_ids: List[str] = get_video_ids_from_file(file)
-    typer.echo(f"Found {len(video_ids)} urls in the input file.")
-    typer.echo("Generating recording download links, this may take a bit...")
+        Args:
+            file (Path): The file containing the html of the recman page.
+            course (str): The course name.
+            academic_year (str): The course academic year in the format "2021-22".
 
-    try:
-        pool: ThreadPool = ThreadPool()
-        recordings: List[Recording] = pool.starmap(
-            generate_recording_from_id,
-            zip(video_ids, repeat(course), repeat(academic_year)),
-        )
-    except requests.exceptions.ConnectionError as e:
-        typer.echo(str(e))
-        raise typer.Exit(code=1)
+        Returns:
+            List[Recording]: Recording objects extracted from the file.
+        """
+        # Get video ids from file
+        video_ids: List[str] = []
+        with open(file) as f:
+            for i, line in enumerate(f):
+                line = line.rstrip()
+                if line.startswith("http"):
+                    video_ids.append(extract_id_from_url(url=line, ticket=self.cookie_ticket))
+                elif len(line) == 32:
+                    video_ids.append(line)
+                elif len(line) != 32 and len(line) > 0:
+                    print(
+                        f'[red]Invalid line found, line number {i+1} is "{line}",[/red] Continuing...'
+                    )
 
-    return recordings
+        print(f"Found {len(video_ids)} urls in the input file")
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            TimeElapsedColumn(),
+        ) as progress:
+            progress.add_task(description="Generating recording download links...", total=None)
+            pool: ThreadPool = ThreadPool()
+            recordings: List[Recording] = pool.starmap(
+                generate_recording_from_id,
+                zip(video_ids, repeat(self.cookie_ticket), repeat(course), repeat(academic_year)),
+            )
+
+        return recordings

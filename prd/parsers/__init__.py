@@ -1,4 +1,5 @@
-from .archives_parser import recordings_from_archives
-from .txt_parser import recordings_from_txt
-from .webeep_parser import recordings_from_webeep
-from .webpage_parser import recordings_from_webpage_url, recordings_from_webpage_file
+from .abstract_parser import Parser
+from .archives_parser import ArchivesParser
+from .txt_parser import TxtParser
+from .webeep_parser import WebeepParser
+from .webpage_parser import WebpageParser

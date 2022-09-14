@@ -1,8 +1,10 @@
+import os
 from xlsxwriter import Workbook
 from xlsxwriter.worksheet import Worksheet
-import os
 from typing import List, Dict
-from Recording import Recording
+from rich.progress import track
+
+from prd.webex_api import Recording
 
 
 def _divide_in_courses(recordings: List[Recording]) -> Dict[str, List[Recording]]:
@@ -41,6 +43,7 @@ def generate_xlsx(recordings: List[Recording], output_folder: str) -> None:
     courses: Dict[str, List[Recording]] = _divide_in_courses(recordings)
 
     for course, recordings in courses.items():
+        print(f"Generating xlsx file for {course}...")
         course_output_path: str = os.path.join(output_folder, course)
         if not os.path.exists(course_output_path):
             os.makedirs(course_output_path)
@@ -84,3 +87,5 @@ def generate_xlsx(recordings: List[Recording], output_folder: str) -> None:
             worksheet.write(row + 1, 2, recording.subject, body)
 
         workbook.close()
+
+    print(f"[green]All xlsx files generated correctly")

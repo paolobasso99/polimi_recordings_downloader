@@ -1,13 +1,14 @@
 from datetime import datetime
-from cookies import get_cookie
 from typing import Optional
 import requests
 from requests.models import Response
-from Recording import Recording
+
+from prd.webex_api.Recording import Recording
 
 
 def generate_recording_from_id(
     video_id: str,
+    ticket: str,
     course: str,
     academic_year: str,
     subject: Optional[str] = None,
@@ -17,6 +18,7 @@ def generate_recording_from_id(
 
     Args:
         video_id (str): Id of the video.
+        ticket (str): The "ticket" cookie value.
         course (str): Name of the course.
         academic_year (str): The academic year of the course.
         subject (str, optional): The subjet of the recording. If None use the title of the recording.
@@ -32,7 +34,7 @@ def generate_recording_from_id(
         + "/stream?siteurl=politecnicomilano"
     )
     res: Response = requests.get(
-        endpoint, cookies={"ticket": get_cookie("ticket")}
+        endpoint, cookies={"ticket": ticket}
     )
     if res.headers.get("content-type") != "application/json":
         raise requests.exceptions.ConnectionError(

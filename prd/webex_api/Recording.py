@@ -3,7 +3,7 @@ from typing import List
 
 
 class Recording:
-    """Class representing the recordings."""
+    """Class representing a recordings."""
 
     def __init__(
         self,
