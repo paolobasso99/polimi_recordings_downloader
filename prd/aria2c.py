@@ -2,6 +2,7 @@ import os
 import subprocess
 from typing import List
 from rich.progress import track
+from rich import print
 
 from prd.config import Config
 from prd.webex_api import Recording
