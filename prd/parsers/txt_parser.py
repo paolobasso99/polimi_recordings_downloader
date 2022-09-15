@@ -12,6 +12,18 @@ from prd.parsers import Parser
 class TxtParser(Parser):
     """Class to parse txt files."""
 
+    def __init__(
+        self,
+        cookie_ticket: str
+    ):
+        """Create the parser.
+
+        Args:
+            cookie_ticket (str): The ticket cookie.
+        """
+        self.cookie_ticket = cookie_ticket
+
+
     def parse(self, file: Path, course: str, academic_year: Optional[str] = None) -> List[Recording]:
         """Get the recordings from the TXT file.
 

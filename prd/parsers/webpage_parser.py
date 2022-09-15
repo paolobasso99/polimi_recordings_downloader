@@ -15,6 +15,14 @@ from prd.webex_api import extract_id_from_url, generate_recording_from_id
 class WebpageParser(Parser):
     """Class to parse webpages."""
 
+    def __init__(self, cookie_ticket: str):
+        """Create the parser.
+
+        Args:
+            cookie_ticket (str): The ticket cookie.
+        """
+        self.cookie_ticket = cookie_ticket
+
     def _get_id_from_anchor(self, anchor: Tag) -> Tuple[bool, Optional[str]]:
         """
         Get a video id from an anchor, if the link is to Webex.

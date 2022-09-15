@@ -33,7 +33,7 @@ def aria2c_download(recordings: List[Recording], output: str) -> None:
         output (str): The output folder.
     """
     generate_input_file(recordings, output)
-    print("[green] aria2c input file generated")
+    print("[green]aria2c input file generated")
     print("Starting aria2c...")
     subprocess.call(
         [

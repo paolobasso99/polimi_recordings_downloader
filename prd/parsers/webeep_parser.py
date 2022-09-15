@@ -13,6 +13,20 @@ from prd.webex_api import Recording, extract_id_from_url, generate_recording_fro
 class WebeepParser(Parser):
     """Class to parse Webeep recordings page."""
 
+    def __init__(
+        self,
+        cookie_ticket: str,
+        cookie_MoodleSession: str,
+    ):
+        """Create the parser.
+
+        Args:
+            cookie_ticket (str): The ticket cookie.
+            cookie_MoodleSession (str): The MoodleSession cookie.
+        """
+        self.cookie_ticket = cookie_ticket
+        self.cookie_MoodleSession = cookie_MoodleSession
+
     def _get_redirection_links(self, url: str) -> List[str]:
         """Get the redirection links from Webeep.
 
@@ -106,7 +120,9 @@ class WebeepParser(Parser):
             TextColumn("[progress.description]{task.description}"),
             TimeElapsedColumn(),
         ) as progress:
-            progress.add_task(description="Generating recording download links...", total=None)
+            progress.add_task(
+                description="Generating recording download links...", total=None
+            )
             pool: ThreadPool = ThreadPool()
             recordings: List[Tuple(bool, Optional[Recording])] = pool.starmap(
                 self._generate_recording_from_redirection_link,

@@ -15,6 +15,21 @@ from prd.webex_api import Recording, extract_id_from_url, generate_recording_fro
 class ArchivesParser(Parser):
     """Class to parse archives pages."""
 
+    def __init__(
+        self,
+        cookie_ticket: str,
+        cookie_SSL_JSESSIONID: str
+    ):
+        """Create the parser.
+
+        Args:
+            cookie_ticket (str): The ticket cookie.
+            cookie_SSL_JSESSIONID (str): The SSL_JSESSIONID cookie.
+        """
+        self.cookie_ticket = cookie_ticket
+        self.cookie_SSL_JSESSIONID = cookie_SSL_JSESSIONID
+
+
     def parse(self, url: str) -> List[Recording]:
         """Parse an url of the recording archives.
 
@@ -46,6 +61,7 @@ class ArchivesParser(Parser):
             raise RuntimeError(
                 "Zero recordings were found, make sure SSL_JSESSIONID is correct."
             )
+        print(f"There are {len(rows)} rows in the page")
 
         # Need to work for both UserListActivity.do and ArchivioListActivity.do
         is_UserListActivity: bool = url.startswith(
@@ -86,14 +102,14 @@ class ArchivesParser(Parser):
         )
         video_id: str = extract_id_from_url(video_url, ticket=self.cookie_ticket)
 
-        recording_datetime: datetime = datetime.strptime(
-            cells[2].text.strip(), "%d/%m/%Y %H:%M"
-        )
-        course: str = cells[3].text
-        subject: str = cells[5].text
-        academic_year: str = cells[1].text.replace(" / ", "-")
-
-        if is_UserListActivity:
+        if not is_UserListActivity:
+            recording_datetime: datetime = datetime.strptime(
+                cells[2].text.strip(), "%d/%m/%Y %H:%M"
+            )
+            course: str = cells[3].text
+            subject: str = cells[5].text
+            academic_year: str = cells[1].text.replace(" / ", "-")
+        else:
             recording_datetime: datetime = datetime.strptime(
                 cells[1].text.strip(), "%d/%m/%Y %H:%M"
             )
