@@ -17,7 +17,7 @@ def generate_input_file(recordings: List[Recording], output: str) -> None:
     """
     if not os.path.exists(Config.DEFAULT_OUTPUT_FOLDER):
         os.makedirs(Config.DEFAULT_OUTPUT_FOLDER)
-    with open(os.path.join(output, Config.DOWNLOAD_INPUT_FILENAME), "w") as f:
+    with open(os.path.join(output, Config.DOWNLOAD_INPUT_FILENAME), "w", encoding="utf-8") as f:
         for r in track(recordings, description="Generating aria2c input file..."):
             f.write(f"{r.download_url}\n")
             f.write(
