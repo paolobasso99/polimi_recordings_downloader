@@ -5,7 +5,7 @@ from rich import print
 import os
 
 from prd.cookies import save_cookie, get_cookie
-from prd.validation import validate_academic_year
+from prd.validation import validate_academic_year, validate_cookie_name
 from prd.webex_api import Recording
 from prd.config import Config
 from prd.parsers import (
@@ -236,17 +236,11 @@ def set_cookie(
     name: str = typer.Argument(
         ...,
         help='Cookie name. Possible values are "SSL_JSESSIONID", "ticket" and "MoodleSession".',
+        callback=validate_cookie_name,
     ),
     value: str = typer.Argument(..., help="Cookie value."),
 ) -> None:
     """Set the value of a cookie."""
-    # Arguments check
-    if name != "SSL_JSESSIONID" and name != "ticket" and name != "MoodleSession":
-        print(
-            f'[red]The name of the cookie is invalid, possible values are "SSL_JSESSIONID", "ticket" and "MoodleSession".[/red]'
-        )
-        raise typer.Exit(code=1)
-
     save_cookie(name, value)
     print(f"[green]Cookie {name} set to {value}.[/green]")
 
