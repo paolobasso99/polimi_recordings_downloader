@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 def replace_illegal_characters(string: str) -> str:
-    """Replace the illegal characters in a string. Such characters are < > : \ / \ | ? * .
+    """Replace the illegal characters in a string. Such characters are < > : " / \\ | ? * .
 
     Args:
         string (str): The string.

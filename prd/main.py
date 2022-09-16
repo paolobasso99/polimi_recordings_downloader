@@ -16,6 +16,7 @@ from prd.parsers import (
 )
 from prd.create_output import create_output
 
+
 app: typer.Typer = typer.Typer(add_completion=False)
 
 

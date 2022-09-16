@@ -15,11 +15,20 @@ def validate_academic_year(value: str) -> str:
         str: The value itself.
     """
     if value is not None:
-        academic_year_r = re.compile("^[0-9]{4}-[0-9]{2}$")
+        academic_year_r = re.compile("^20([0-9]{2})-([0-9]{2})$")
         if academic_year_r.match(value) is None:
             raise typer.BadParameter(
                 'The course academic year must be in the format "2021-22".'
             )
+
+        result: re.Match[str] = academic_year_r.search(value)
+        y1: int = int(result.group(1))
+        y2: int = int(result.group(2))
+        if y1 + 1 != y2:
+            raise typer.BadParameter(
+                'The course academic year must be in the format "2021-22".'
+            )
+
     return value
 
 
@@ -35,7 +44,7 @@ def validate_cookie_name(name: str) -> str:
     Returns:
         str: The name as is.
     """
-    if name != "SSL_JSESSIONID" and name != "ticket" and name != "MoodleSession":
+    if name not in ["SSL_JSESSIONID", "ticket", "MoodleSession"]:
         raise typer.BadParameter(
             'Possible values are "SSL_JSESSIONID", "ticket" and "MoodleSession".'
         )
