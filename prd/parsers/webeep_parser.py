@@ -2,7 +2,7 @@ from multiprocessing.pool import ThreadPool
 from itertools import repeat
 from typing import List, Tuple, Optional
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
 
@@ -73,6 +73,10 @@ class WebeepParser(Parser):
         )
         soup = BeautifulSoup(res.content, "html.parser")
 
+        video_url_anchor: Tag | None = soup.select_one(".urlworkaround a", href=True)
+        if video_url_anchor is None:
+            return (False, None)
+            
         video_url: str = soup.select_one(".urlworkaround a", href=True)["href"]
         try:
             video_id: str = extract_id_from_url(
