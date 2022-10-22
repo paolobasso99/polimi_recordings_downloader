@@ -121,6 +121,7 @@ def txt(
     ),
     create_xlsx: bool = typer.Option(True, help="Generate xlsx"),
 ) -> None:
+    """Download Polimi lessons recordings from txt file with the list of urls."""
     # Get cookies
     try:
         cookie_ticket: str = get_cookie("ticket")
