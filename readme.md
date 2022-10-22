@@ -73,7 +73,7 @@ Some steps are required:
 1. With your browser [open Webeep](https://webeep.polimi.it). From the browser copy the `MoodleSession` cookie value and set it using: `python -m prd set-cookie MoodleSession "{COOKIE_VALUE}"`.
 2. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python -m prd set-cookie ticket "{COOKIE_VALUE}"`.
 3. With your browser navigare to the Webeep recordings section and copy the url of the page.
-4. Run `python -m prd webeep --academic-year="2021-22" {WEBEEP_URL}`.
+4. Run `python -m prd webeep --academic-year="2021-22" "{WEBEEP_URL}"`.
 
 ### GUIDE 4: Download from webpage url
 This mode parses an URL to a public (i.e. without authentication) HTML page where the professor links directly the recordings.
@@ -82,7 +82,7 @@ Some steps are required:
 1. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python -m prd set-cookie ticket "{COOKIE_VALUE}"`.
 2. With your browser navigate to the page where the direct links are placed.
 3. Copy the URL of the page.
-4. Run `python -m prd webpage-url --course="{COURSE_NAME}" --academic-year="2021-22" {URL}`.
+4. Run `python -m prd webpage-url --course="{COURSE_NAME}" --academic-year="2021-22" "{URL}"`.
 
 ### GUIDE 5: Download from webpage HTML
 This mode parses an HTML file where the professor linked directly the recordings.
