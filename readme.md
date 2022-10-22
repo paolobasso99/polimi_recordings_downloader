@@ -43,7 +43,7 @@ This app can download the recordings from:
 This mode parses a page from the recordings archives to fetch the download links of the videos.
 
 In order to download a batch of recordings some steps are required:
-1. With your browser [open the recordings archives](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314). From the browser copy the `SSL_JSESSIONID` cookie value and set it using: `python -m prd set-cookie SSL_JSESSIONID "{COOKIE_VALUE}"`.
+1. With your browser [open the recordings archives](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314). From the browser copy the `SSL_JSESSIONID` (domain is `www11.ceda.polimi.it`) cookie value and set it using: `python -m prd set-cookie SSL_JSESSIONID "{COOKIE_VALUE}"`. `SSL_JSESSIONID` must be taken from the recordings page, it can change in different pages of the web services.
 2. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python -m prd set-cookie ticket "{COOKIE_VALUE}"`.
 3. With your browser navigare to the [recordings archive](https://servizionline.polimi.it/portaleservizi/portaleservizi/controller/preferiti/Preferiti.do?evn_srv=evento&idServizio=2314) and search for a course to download. Try to have all the recordings in a single page.
 4. Make sure to have all the recordings you want in the page
