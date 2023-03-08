@@ -61,11 +61,6 @@ def archives(
 @app.command()
 def webeep(
     url: str = typer.Argument(..., help="The webeep URL"),
-    academic_year: Optional[str] = typer.Option(
-        None,
-        callback=validate_academic_year,
-        help='The course academic year in the format "2021-22"',
-    ),
     output: str = typer.Option(
         os.path.join(pathlib.Path().resolve(), Config.DEFAULT_OUTPUT_FOLDER),
         help="The output path",
@@ -90,7 +85,7 @@ def webeep(
         cookie_ticket=cookie_ticket, cookie_MoodleSession=cookie_MoodleSession
     )
     try:
-        recordings: List[Recording] = parser.parse(url, academic_year)
+        recordings: List[Recording] = parser.parse(url)
     except Exception as e:
         print("[red]" + str(e) + "[/red]")
         raise typer.Exit(1)

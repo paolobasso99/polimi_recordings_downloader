@@ -2,6 +2,7 @@ from multiprocessing.pool import ThreadPool
 from itertools import repeat
 from typing import List, Tuple, Optional
 import requests
+import re
 from bs4 import BeautifulSoup, Tag
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
@@ -27,41 +28,14 @@ class WebeepParser(Parser):
         self.cookie_ticket = cookie_ticket
         self.cookie_MoodleSession = cookie_MoodleSession
 
-    def _get_redirection_links(self, url: str) -> List[str]:
-        """Get the redirection links from Webeep.
-
-        Args:
-            url (str): The URL to the Webeep page.
-
-        Raises:
-            RuntimeError: if unable to open the page.
-
-        Returns:
-            List[str]: List of Webeep redirection links.
-        """
-        redirection_links: List[str] = []
-        res: requests.Response = requests.get(
-            url,
-            cookies={"MoodleSession": self.cookie_MoodleSession},
-            allow_redirects=False,
-        )
-        if res.status_code == 303:
-            raise RuntimeError(
-                "Unable to open the Webeep page, check MoodleSession cookie."
-            )
-        soup: BeautifulSoup = BeautifulSoup(res.content, "html.parser")
-        for a in soup.select(".single-section a.aalink", href=True):
-            redirection_links.append(a["href"])
-
-        return redirection_links
-
     def _generate_recording_from_redirection_link(
-        self, link: str, academic_year: str
+        self, link: str, course: str, academic_year: str
     ) -> Tuple[bool, Optional[Recording]]:
         """Create a Recording object from a Webeep redirection link.
 
         Args:
             link (str): Webeep redirection link to the recording.
+            course (str): The name of the course.
             academic_year (str): The course academic year in the format "2021-22".
 
         Returns:
@@ -76,7 +50,7 @@ class WebeepParser(Parser):
         video_url_anchor: Tag | None = soup.select_one(".urlworkaround a", href=True)
         if video_url_anchor is None:
             return (False, None)
-            
+
         video_url: str = soup.select_one(".urlworkaround a", href=True)["href"]
         try:
             video_id: str = extract_id_from_url(
@@ -85,8 +59,7 @@ class WebeepParser(Parser):
         except ValueError:
             return (False, None)
 
-        subject: str = soup.select_one("#region-main h2").text
-        course: str = soup.select_one(".page-header-headings h1").text
+        subject: str = soup.select_one("#page-header h4").text
 
         recording: Recording = generate_recording_from_id(
             video_id=video_id,
@@ -98,14 +71,14 @@ class WebeepParser(Parser):
 
         return (True, recording)
 
-    def parse(self, url: str, academic_year: Optional[str] = None) -> List[Recording]:
+    def parse(self, url: str) -> List[Recording]:
         """Get the recordings from the Webeep page.
 
         Args:
             url (str): The Webeep url containing the links to the recordings.
-            academic_year (Optional[str], optional): The academic year in the format "2021-22". Defaults to None.
 
         Raises:
+            RuntimeError: if unable to open the Webeep page.
             ValueError: If the url is not correct.
 
         Returns:
@@ -114,7 +87,23 @@ class WebeepParser(Parser):
         if not url.startswith("https://webeep.polimi.it/"):
             raise ValueError("The url must start with 'https://webeep.polimi.it/'.")
 
-        redirection_links: List[str] = self._get_redirection_links(url)
+        redirection_links: List[str] = []
+        res: requests.Response = requests.get(
+            url,
+            cookies={"MoodleSession": self.cookie_MoodleSession},
+            allow_redirects=False,
+        )
+        if res.status_code == 303:
+            raise RuntimeError(
+                "Unable to open the Webeep page, check MoodleSession cookie."
+            )
+        soup: BeautifulSoup = BeautifulSoup(res.content, "html.parser")
+        course: str = soup.select_one("#page-header h2").text
+        academic_year: str = re.search('\s\[(\d+-\d+)\]', course).group(1)
+        course = re.sub(r'\s\[\d+-\d+\]', '', course)
+
+        for a in soup.select(".single-section a.aalink", href=True):
+            redirection_links.append(a["href"])
         print(
             f"Found {len(redirection_links)} links in the page (not all are recordings)."
         )
@@ -130,7 +119,7 @@ class WebeepParser(Parser):
             pool: ThreadPool = ThreadPool()
             recordings: List[Tuple(bool, Optional[Recording])] = pool.starmap(
                 self._generate_recording_from_redirection_link,
-                zip(redirection_links, repeat(academic_year)),
+                zip(redirection_links, repeat(course), repeat(academic_year)),
             )
             recordings = list(filter(lambda item: item[0] == True, recordings))
             recordings = [r[1] for r in recordings]

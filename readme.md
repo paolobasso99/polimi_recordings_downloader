@@ -18,7 +18,7 @@ If you want to download a single recoring consider using [this browser extension
     - [GUIDE 5: Download from webpage HTML](#guide-5-download-from-webpage-html)
     - [Output](#output)
     - [Tips](#tips)
-      - [Retrying downloads without reparsing, directly from dowaload_links.txt](#retrying-downloads-without-reparsing-directly-from-dowaload_linkstxt)
+      - [Retrying downloads without reparsing, directly from dowaload\_links.txt](#retrying-downloads-without-reparsing-directly-from-dowaload_linkstxt)
 
 ## Set up
 ### System dependencies
@@ -73,7 +73,7 @@ Some steps are required:
 1. With your browser [open Webeep](https://webeep.polimi.it). From the browser copy the `MoodleSession` cookie value and set it using: `python -m prd set-cookie MoodleSession "{COOKIE_VALUE}"`.
 2. With your browser [open Webex](https://politecnicomilano.webex.com/webappng/sites/politecnicomilano/dashboard?siteurl=politecnicomilano) and login. From the browser copy the `ticket` cookie value and set it using: `python -m prd set-cookie ticket "{COOKIE_VALUE}"`.
 3. With your browser navigare to the Webeep recordings section and copy the url of the page.
-4. Run `python -m prd webeep --academic-year="2021-22" "{WEBEEP_URL}"`.
+4. Run `python -m prd webeep "{WEBEEP_URL}"`.
 
 ### GUIDE 4: Download from webpage url
 This mode parses an URL to a public (i.e. without authentication) HTML page where the professor links directly the recordings.
